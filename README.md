@@ -1,8 +1,6 @@
 > Please make a PR in case there's any mistakes
 
-# SQL Queries Comprehensive Guide
-
-This comprehensive guide contains all SQL queries and concepts organized from basic to advanced topics. The content is compiled from various SQL tutorial files covering database management, querying, functions, procedures, triggers, views, and user role management.
+# SQL Queries Executed in class
 
 ## Table of Contents
 

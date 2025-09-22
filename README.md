@@ -106,7 +106,7 @@ create table new1_student like student;
 ```sql
 -- To drop the table--delete's the entire content along with structure
 drop table tablename;
-drop table new_student;
+truncate table new_student;
 ```
 
 ### ALTER TABLE Operations

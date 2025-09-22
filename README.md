@@ -147,7 +147,7 @@ alter table faculty add column phone integer,add column address varchar(10);
 
 -- Modify column definition
 alter table faculty modify column emailid varchar(30);
-alter table faculty modify emailid varchar(35) after phone;//both def and position
+alter table faculty modify emailid varchar(35) after phone; -- both def and position
 
 -- Drop column
 alter table faculty drop column phone;
@@ -155,9 +155,11 @@ alter table faculty drop column phone;
 alter table faculty drop phone;
 
 -- Rename column--need to specify col definiton also
+-- Need to use CHANGE to rename column, cant change name with modifu
 alter table faculty change column emailid email_id varchar(30); -- emamilid was a typo
 
 -- To change default value
+-- Double use of alter, first table, then column
 alter table faculty alter fname set default 'xxx';
 
 -- To drop default value
@@ -303,7 +305,7 @@ AND ds.dnumber=d.dnumber and Plocation = 'Sugarland';
 ### String Comparisons and NULL Handling
 
 ```sql
--- String comparison
+-- String comparison, get employees born in 1960s
 select fname,lname,bdate from employee where bdate like '196_______';
 
 -- Issue: null cannot be compared with = instead use is
@@ -320,9 +322,10 @@ select ssn,super_ssn from employee where super_ssn is not null;
 -- Aggregate functions
 select sum(salary) as total,min(salary),avg(salary) from employee where dno=5;
 
--- Count demo
+-- Count demo : Counts non null values
 select count(ssn) from employee;
 select count(*) from employee;
+-- Get the number of employees who have a supervisor
 select count(super_ssn) from employee;
 
 -- Count of employees working for research dept
@@ -443,6 +446,20 @@ select distinct essn from works_on where pno in(select pno from works_on where e
 SELECT DISTINCT Pnumber FROM PROJECT WHERE Pnumber IN (SELECT Pno FROM WORKS_ON, EMPLOYEE WHERE Essn = Ssn AND Lname = 'Smith')
 or pnumber in
 (SELECT Pnumber FROM PROJECT, DEPARTMENT, EMPLOYEE WHERE Dnum = Dnumber AND Mgr_ssn = Ssn AND Lname = 'Smith');
+
+
+-- Equivalent union version
+SELECT Pno AS Pnumber
+FROM WORKS_ON w
+JOIN EMPLOYEE e ON w.Essn = e.Ssn
+WHERE e.Lname = 'Smith'
+UNION   -- removes duplicates automatically
+SELECT p.Pnumber
+FROM PROJECT p
+JOIN DEPARTMENT d ON p.Dnum = d.Dnumber
+JOIN EMPLOYEE e ON d.Mgr_ssn = e.Ssn
+WHERE e.Lname = 'Smith';
+
 ```
 
 ### Workload Comparison Queries
@@ -455,8 +472,6 @@ SELECT DISTINCT Essn FROM WORKS_ON
 WHERE (Pno, Hours) IN
 ( SELECT Pno, Hours FROM WORKS_ON
 WHERE Essn = '123456789' );
-
--- Add data so that any other employee has same workload
 ```
 
 ### Salary Comparison Queries
@@ -474,7 +489,7 @@ SELECT Lname, Fname,salary FROM EMPLOYEE WHERE Salary >(SELECT max(salary) FROM 
 
 SELECT Lname, Fname FROM EMPLOYEE WHERE Salary >SOME(SELECT Salary FROM EMPLOYEE WHERE Dno = 5 );
 
-or use any:
+-- or use any:
 SELECT Lname, Fname FROM EMPLOYEE WHERE Salary >any(SELECT Salary FROM EMPLOYEE WHERE Dno = 5 );
 ```
 

@@ -130,8 +130,8 @@ alter table student drop temp;
 rename table student to students;
 
 -- Truncate table and drop table
-truncate table new_student; -- Assuming new_temp was a typo for new_student
-drop table new1_student; -- Assuming temp was a typo for new1_student
+truncate table new_student;
+drop table new1_student;
 ```
 
 ### Advanced ALTER TABLE Operations
